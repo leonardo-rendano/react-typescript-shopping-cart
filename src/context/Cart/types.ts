@@ -1,3 +1,5 @@
+import { ReactElement } from "react"
+
 export type CartItemType = {
   sku: string,
   name: string,
@@ -19,4 +21,8 @@ export type ReducerActionType = typeof REDUCER_ACTION_TYPE
 export type ReducerAction = {
   type: string,
   payload?: CartItemType,
+}
+
+export type ChildrenType = {
+  children?: ReactElement | ReactElement[]
 }

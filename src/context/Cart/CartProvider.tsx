@@ -1,10 +1,11 @@
-import { createContext, useMemo, useReducer } from "react";
-import { CartItemType, CartStateType, ReducerAction, REDUCER_ACTION_TYPE } from "./types";
+import { createContext, ReactElement, useMemo, useReducer } from "react";
+import { CartItemType, CartStateType, ChildrenType, ReducerAction, REDUCER_ACTION_TYPE } from "./types";
 
 const initialCartState: CartStateType = {
   cart: []
 }
 
+// REDUCER - START
 const reducer = (state: CartStateType, action: ReducerAction): CartStateType => {
   switch (action.type) {
     case REDUCER_ACTION_TYPE.ADD: {
@@ -72,7 +73,9 @@ const reducer = (state: CartStateType, action: ReducerAction): CartStateType => 
       throw new Error('Reducer action type não identificado!')
   }
 }
+// REDUCER - FINISH
 
+// CUSTOM HOOK - START
 const useCartContext = (initialCartState: CartStateType) => {
   const [state, dispatch] = useReducer(reducer, initialCartState)
 
@@ -101,3 +104,28 @@ const useCartContext = (initialCartState: CartStateType) => {
 
   return { dispatch, REDUCER_ACTIONS, totalItems, totalPrice, cart }
 }
+// CUSTOM HOOK - FINISH
+
+// CONTEXT PROVIDER - START
+export type UseCartContextType = ReturnType<typeof useCartContext>
+
+const initCartContextState: UseCartContextType = {
+  dispatch: () => {},
+  REDUCER_ACTIONS: REDUCER_ACTION_TYPE,
+  totalItems: 0,
+  totalPrice: '',
+  cart: []
+}
+
+export const CartContext = createContext<UseCartContextType>(initCartContextState)
+
+export const CartProvider = ({ children }: ChildrenType): ReactElement => {
+  return (
+    <CartContext.Provider value={useCartContext(initialCartState)}>
+      {children}
+    </CartContext.Provider>
+  )
+}
+// CONTEXT PROVIDER - FINISH
+
+export default CartContext;
