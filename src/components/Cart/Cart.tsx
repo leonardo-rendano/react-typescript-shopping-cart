@@ -1,6 +1,6 @@
 import { useState } from "react"
 import useCart from "../../hooks/useCart"
-import { CartLineItem } from "../CartLineItem/CartLineItem"
+import CartLineItem from "../CartLineItem/CartLineItem"
 
 export const Cart = () => {
   const [confirm, setconfirm] = useState<boolean>(false)

@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactElement } from "react"
+import { ChangeEvent, ReactElement, memo } from "react"
 import { CartItemType } from "../../context/Cart/types"
 import { ReducerAction } from "../../context/Cart/types"
 import { ReducerActionType } from "../../context/Cart/types"
@@ -9,7 +9,7 @@ type PropsType = {
   REDUCER_ACTIONS: ReducerActionType
 }
 
-export const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
+const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => {
 
   const img: string = new URL(`../../images/${item.sku}.jpeg`, import.meta.url).href
 
@@ -82,6 +82,14 @@ export const CartLineItem = ({ item, dispatch, REDUCER_ACTIONS }: PropsType) => 
     </li>
   )
 
-
   return content
 }
+
+function areItemEqual({ item: prevItem }: PropsType, { item: nextItem}: PropsType) {
+  return Object.keys(prevItem).every(key => {
+    return prevItem[key as keyof CartItemType] === nextItem[key as keyof CartItemType]
+  })
+}
+const MemoizedCartLineItem = memo<typeof CartLineItem>(CartLineItem, areItemEqual)
+
+export default MemoizedCartLineItem
